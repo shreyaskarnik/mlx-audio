@@ -166,6 +166,9 @@ def load_config(model_path: Union[str, Path], **kwargs) -> dict:
         model_path = get_model_path(model_path, **kwargs)
 
     config_file = model_path / "config.json"
+    if not config_file.exists():
+        # Fallback for HumeAI/mlx-tada-* layout (config in model/ subdir)
+        config_file = model_path / "model" / "config.json"
     if config_file.exists():
         with open(config_file, encoding="utf-8") as f:
             return json.load(f)
@@ -190,6 +193,10 @@ def load_weights(model_path: Path) -> dict:
 
     if not weight_files:
         weight_files = glob.glob(str(model_path / "*.npz"))
+
+    # Fallback for HumeAI/mlx-tada-* layout (weights in model/ subdir)
+    if not weight_files:
+        weight_files = glob.glob(str(model_path / "model" / "*.safetensors"))
 
     if not weight_files:
         raise FileNotFoundError(

@@ -498,8 +498,35 @@ class Model(nn.Module):
         if not aligner_path.exists():
             return
 
+        # Support both PyTorch (model.safetensors) and MLX (weights.safetensors)
+        aligner_weights_file = aligner_path / "model.safetensors"
+        is_mlx_format = False
+        if not aligner_weights_file.exists():
+            aligner_weights_file = aligner_path / "weights.safetensors"
+            is_mlx_format = True
+        if not aligner_weights_file.exists():
+            return
+
+        # For MLX-format weights, use mlx-tada's native MLX aligner if available
+        if is_mlx_format:
+            try:
+                from mlx_tada.aligner import Aligner as MlxAligner
+
+                self._mlx_aligner = MlxAligner()
+                aligner_weights = mx.load(str(aligner_weights_file))
+                self._mlx_aligner.load_weights(
+                    list(aligner_weights.items()), strict=False
+                )
+                self._mlx_aligner.eval()
+                # Force materialization of aligner parameters
+                mx.metal.clear_cache()
+                self._aligner_model = self._mlx_aligner
+                return
+            except ImportError:
+                pass  # Fall through to PyTorch loading with transposition
+
         # Load raw weights and strip 'encoder.' prefix
-        raw_weights = torch_load_file(str(aligner_path / "model.safetensors"))
+        raw_weights = torch_load_file(str(aligner_weights_file))
         stripped = {}
         for k, v in raw_weights.items():
             new_key = k.replace("encoder.", "", 1) if k.startswith("encoder.") else k
@@ -527,6 +554,13 @@ class Model(nn.Module):
         for k, v in stripped.items():
             if k not in skip:
                 resolved[k] = v
+
+        # MLX weights have channels-last Conv1d; transpose to PyTorch format
+        if is_mlx_format:
+            for k, v in list(resolved.items()):
+                if "conv" in k and "weight" in k and len(v.shape) == 3:
+                    # MLX Conv1d: (C_out, K, C_in) -> PyTorch: (C_out, C_in, K)
+                    resolved[k] = v.permute(0, 2, 1)
 
         # Create Wav2Vec2ForCTC with correct config (24 layers, hidden=1024)
         w2v_config = Wav2Vec2Config(
@@ -570,14 +604,73 @@ class Model(nn.Module):
                 "Encoder/aligner not loaded. Ensure HumeAI/tada-codec is available."
             )
 
-        import torch
-        import torchaudio
-
         # Prepare audio
         if audio.ndim == 1:
             audio_np = np.array(audio)
         else:
             audio_np = np.array(audio[0])
+
+        text = normalize_text(text)
+
+        # Use MLX-native aligner if available (from mlx-tada package)
+        if hasattr(self, "_mlx_aligner") and self._mlx_aligner is not None:
+            return self._encode_reference_mlx(audio_np, text, sample_rate)
+
+        return self._encode_reference_torch(audio_np, text, sample_rate)
+
+    def _encode_reference_mlx(
+        self, audio_np: np.ndarray, text: str, sample_rate: int
+    ) -> EncoderOutput:
+        """Encode reference using MLX-native aligner (from mlx-tada)."""
+        from mlx_tada.audio import resample_audio
+
+        audio_24k = mx.array(audio_np).reshape(1, -1)
+        audio_len = audio_np.shape[0]
+
+        # Resample to 16kHz for aligner
+        audio_16k = mx.array(resample_audio(audio_np, sample_rate, 16000)).reshape(
+            1, -1
+        )
+
+        text_token_ids = self._tokenizer.encode(text, add_special_tokens=False)
+        eos_token_id = self._tokenizer.eos_token_id
+        text_tokens_np = np.array([text_token_ids], dtype=np.int64)
+        text_tokens_len = len(text_token_ids)
+        input_lengths = np.array(
+            [int(np.ceil(audio_len / sample_rate * 50))], dtype=np.int64
+        )
+
+        token_positions_np, token_masks_np = self._mlx_aligner(
+            audio_16k, text_tokens_np, input_lengths, eos_token_id
+        )
+
+        token_positions_mx = mx.array(token_positions_np).reshape(1, -1)
+        token_masks_mx = mx.array(token_masks_np).reshape(1, -1)
+
+        # Run encoder
+        token_values = self._encoder.forward(
+            audio_24k, token_positions_mx, token_masks_mx, sample=True
+        )
+
+        text_tokens_mx = mx.array(text_tokens_np).reshape(1, -1)
+
+        return EncoderOutput(
+            audio=audio_24k,
+            audio_len=mx.array([audio_len]),
+            text=[text],
+            text_tokens=text_tokens_mx,
+            text_tokens_len=mx.array([text_tokens_len]),
+            token_positions=token_positions_mx,
+            token_values=token_values,
+            token_masks=token_masks_mx,
+        )
+
+    def _encode_reference_torch(
+        self, audio_np: np.ndarray, text: str, sample_rate: int
+    ) -> EncoderOutput:
+        """Encode reference using PyTorch aligner (from tada-codec)."""
+        import torch
+        import torchaudio
 
         audio_torch = torch.from_numpy(audio_np).float().unsqueeze(0)
 
@@ -591,8 +684,7 @@ class Model(nn.Module):
         # Resample to 16kHz for aligner
         audio_16k = torchaudio.functional.resample(audio_torch, 24000, 16000)
 
-        # Normalize text and tokenize
-        text = normalize_text(text)
+        # Tokenize
         text_tokens = self._tokenizer.encode(
             text, add_special_tokens=False, return_tensors="pt"
         )
@@ -615,10 +707,7 @@ class Model(nn.Module):
         # Run encoder
         audio_mx = mx.array(audio_np).reshape(1, -1)
         token_values = self._encoder.forward(
-            audio_mx,
-            token_positions_mx,
-            token_masks_mx,
-            sample=True,
+            audio_mx, token_positions_mx, token_masks_mx, sample=True
         )
 
         text_tokens_mx = mx.array(text_tokens[0].numpy()).reshape(1, -1)
@@ -1412,6 +1501,7 @@ class Model(nn.Module):
             # (keys already match)
 
             # Handle Sequential index mapping for prediction_head
+            # PyTorch format: adaLN_modulation.1.weight, t_embedder.mlp.N.weight
             new_key = re.sub(
                 r"\.t_embedder\.mlp\.(\d+)\.",
                 r".t_embedder.mlp.layers.\1.",
@@ -1430,6 +1520,17 @@ class Model(nn.Module):
             new_key = re.sub(
                 r"\.adaLN_modulation\.(\d+)\.weight$",
                 r".adaLN_modulation.layers.\1.weight",
+                new_key,
+            )
+            # HumeAI/mlx-tada format: adaLN_modulation_linear, t_embedder.mlp_N
+            new_key = re.sub(
+                r"\.adaLN_modulation_linear\.",
+                r".adaLN_modulation.layers.1.",
+                new_key,
+            )
+            new_key = re.sub(
+                r"\.t_embedder\.mlp_(\d+)\.",
+                r".t_embedder.mlp.layers.\1.",
                 new_key,
             )
 
@@ -1476,10 +1577,17 @@ class Model(nn.Module):
         except Exception as e:
             print(f"Warning: Could not load tokenizer: {e}")
 
-        # Load decoder and encoder from tada-codec
+        # Load decoder and encoder from tada-codec or model_path itself
+        # HumeAI/mlx-tada-* repos include encoder/decoder/aligner subdirs
         import os
 
-        codec_path = os.environ.get("TADA_CODEC_PATH", "HumeAI/tada-codec")
+        codec_path = os.environ.get("TADA_CODEC_PATH", None)
+        if codec_path is None:
+            # Check if model_path has encoder/decoder subdirs (mlx-tada layout)
+            if (model_path / "encoder").exists() and (model_path / "decoder").exists():
+                codec_path = str(model_path)
+            else:
+                codec_path = "HumeAI/tada-codec"
 
         # Load decoder (decoder weights are NOT in main model)
         try:
@@ -1499,6 +1607,106 @@ class Model(nn.Module):
 # ============================================================================
 # Helper functions
 # ============================================================================
+
+
+def _remap_mlx_tada_codec_keys(
+    weights: Dict[str, mx.array], component: str
+) -> Dict[str, mx.array]:
+    """Remap HumeAI/mlx-tada codec keys to PR model format."""
+    remapped = {}
+    num_blocks = 4  # tada codec has 4 upsample/downsample blocks
+
+    for k, v in weights.items():
+        new_key = k
+
+        if component == "decoder" and "wav_decoder." in k:
+            # initial_conv -> model.0
+            new_key = new_key.replace(
+                "wav_decoder.initial_conv.", "wav_decoder.model.0."
+            )
+            # final_snake -> model.{2*num_blocks+1}
+            new_key = new_key.replace(
+                "wav_decoder.final_snake.",
+                f"wav_decoder.model.{num_blocks + 1}.",
+            )
+            # final_conv -> model.{2*num_blocks+2}
+            new_key = new_key.replace(
+                "wav_decoder.final_conv.",
+                f"wav_decoder.model.{num_blocks + 2}.",
+            )
+            # blocks.N.snake -> model.{2N+1}.block.0
+            m = re.match(r"wav_decoder\.blocks\.(\d+)\.snake\.(.*)", new_key)
+            if m:
+                n = int(m.group(1))
+                new_key = f"wav_decoder.model.{n+1}.block.0.{m.group(2)}"
+            # blocks.N.conv_transpose -> model.{2N+1}.block.1
+            m = re.match(r"wav_decoder\.blocks\.(\d+)\.conv_transpose\.(.*)", new_key)
+            if m:
+                n = int(m.group(1))
+                new_key = f"wav_decoder.model.{n+1}.block.1.{m.group(2)}"
+            # blocks.N.res{M}.snake1 -> model.{2N+1}.block.{M+1}.block.0
+            m = re.match(r"wav_decoder\.blocks\.(\d+)\.res(\d+)\.snake1\.(.*)", new_key)
+            if m:
+                n, r = int(m.group(1)), int(m.group(2))
+                new_key = f"wav_decoder.model.{n+1}.block.{r+1}.block.0.{m.group(3)}"
+            # blocks.N.res{M}.conv1 -> model.{2N+1}.block.{M+1}.block.1
+            m = re.match(r"wav_decoder\.blocks\.(\d+)\.res(\d+)\.conv1\.(.*)", new_key)
+            if m:
+                n, r = int(m.group(1)), int(m.group(2))
+                new_key = f"wav_decoder.model.{n+1}.block.{r+1}.block.1.{m.group(3)}"
+            # blocks.N.res{M}.snake2 -> model.{2N+1}.block.{M+1}.block.2
+            m = re.match(r"wav_decoder\.blocks\.(\d+)\.res(\d+)\.snake2\.(.*)", new_key)
+            if m:
+                n, r = int(m.group(1)), int(m.group(2))
+                new_key = f"wav_decoder.model.{n+1}.block.{r+1}.block.2.{m.group(3)}"
+            # blocks.N.res{M}.conv2 -> model.{2N+1}.block.{M+1}.block.3
+            m = re.match(r"wav_decoder\.blocks\.(\d+)\.res(\d+)\.conv2\.(.*)", new_key)
+            if m:
+                n, r = int(m.group(1)), int(m.group(2))
+                new_key = f"wav_decoder.model.{n+1}.block.{r+1}.block.3.{m.group(3)}"
+
+        elif component == "encoder" and "wav_encoder." in k:
+            # initial_conv -> block.0
+            new_key = new_key.replace(
+                "wav_encoder.initial_conv.", "wav_encoder.block.0."
+            )
+            # final_snake -> block.5
+            new_key = new_key.replace(
+                "wav_encoder.final_snake.", "wav_encoder.block.5."
+            )
+            # final_conv -> block.6
+            new_key = new_key.replace("wav_encoder.final_conv.", "wav_encoder.block.6.")
+            # blocks.N.res{M} -> block.{N+1}.block.{M-1} (res1=0, res2=1, res3=2)
+            m = re.match(r"wav_encoder\.blocks\.(\d+)\.res(\d+)\.snake1\.(.*)", new_key)
+            if m:
+                n, r = int(m.group(1)), int(m.group(2))
+                new_key = f"wav_encoder.block.{n+1}.block.{r-1}.block.0.{m.group(3)}"
+            m = re.match(r"wav_encoder\.blocks\.(\d+)\.res(\d+)\.conv1\.(.*)", new_key)
+            if m:
+                n, r = int(m.group(1)), int(m.group(2))
+                new_key = f"wav_encoder.block.{n+1}.block.{r-1}.block.1.{m.group(3)}"
+            m = re.match(r"wav_encoder\.blocks\.(\d+)\.res(\d+)\.snake2\.(.*)", new_key)
+            if m:
+                n, r = int(m.group(1)), int(m.group(2))
+                new_key = f"wav_encoder.block.{n+1}.block.{r-1}.block.2.{m.group(3)}"
+            m = re.match(r"wav_encoder\.blocks\.(\d+)\.res(\d+)\.conv2\.(.*)", new_key)
+            if m:
+                n, r = int(m.group(1)), int(m.group(2))
+                new_key = f"wav_encoder.block.{n+1}.block.{r-1}.block.3.{m.group(3)}"
+            # blocks.N.snake -> block.{N+1}.block.3 (snake before stride conv)
+            m = re.match(r"wav_encoder\.blocks\.(\d+)\.snake\.(.*)", new_key)
+            if m:
+                n = int(m.group(1))
+                new_key = f"wav_encoder.block.{n+1}.block.3.{m.group(2)}"
+            # blocks.N.conv -> block.{N+1}.block.4 (stride conv)
+            m = re.match(r"wav_encoder\.blocks\.(\d+)\.conv\.(.*)", new_key)
+            if m:
+                n = int(m.group(1))
+                new_key = f"wav_encoder.block.{n+1}.block.4.{m.group(2)}"
+
+        remapped[new_key] = v
+
+    return remapped
 
 
 def _load_codec_weights(path: Path, component: str = "encoder") -> Dict[str, mx.array]:
@@ -1543,6 +1751,13 @@ def _load_codec_weights(path: Path, component: str = "encoder") -> Dict[str, mx.
         if k not in skip_keys:
             resolved[k] = v
 
+    # Detect if weights are already in MLX format (no parametrizations = pre-converted)
+    is_mlx_format = not any("parametrizations" in k for k in weights)
+
+    # HumeAI/mlx-tada format uses different wav_decoder naming
+    if is_mlx_format:
+        resolved = _remap_mlx_tada_codec_keys(resolved, component)
+
     # Key renaming and transposition
     for k, v in resolved.items():
         new_key = k
@@ -1550,16 +1765,19 @@ def _load_codec_weights(path: Path, component: str = "encoder") -> Dict[str, mx.
         if "_precomputed_mask" in k or "rope_freqs" in k:
             continue
 
-        # FFN Sequential mapping
+        # FFN Sequential mapping (PyTorch format)
         new_key = re.sub(r"\.ffn\.0\.", ".ffn_in.", new_key)
         new_key = re.sub(r"\.ffn\.3\.", ".ffn_out.", new_key)
+        # FFN mapping (HumeAI/mlx-tada format)
+        new_key = re.sub(r"\.linear1\.", ".ffn_in.", new_key)
+        new_key = re.sub(r"\.linear2\.", ".ffn_out.", new_key)
 
         # Snake alpha
         if ".alpha" in new_key and len(v.shape) == 3:
             v = v.squeeze()
 
-        # Conv transposition
-        if len(v.shape) == 3 and "weight" in new_key:
+        # Conv transposition (only needed for PyTorch weights)
+        if len(v.shape) == 3 and "weight" in new_key and not is_mlx_format:
             if component == "encoder":
                 # Encoder has EncoderBlock with stride conv at block.4
                 is_stride_conv = bool(
