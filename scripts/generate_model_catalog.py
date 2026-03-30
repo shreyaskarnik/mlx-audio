@@ -54,6 +54,8 @@ def yes_no(value: bool | None) -> str:
 
 
 def docs_link(entry: ModelDocEntry) -> str:
+    if not entry.docs_path:
+        return f"**{entry.name}**"
     if entry.docs_path.startswith(("http://", "https://")):
         return f"[**{entry.name}**]({entry.docs_path})"
     page_name = Path(entry.docs_path).name

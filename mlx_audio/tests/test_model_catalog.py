@@ -2,6 +2,7 @@ import unittest
 
 from mlx_audio.model_catalog import (
     CATALOG_EXCLUDED_PACKAGES,
+    REPO_BLOB_MAIN_URL,
     collect_model_doc_entries,
     get_model_doc_entries,
     get_model_doc_entry,
@@ -53,6 +54,15 @@ class TestModelCatalog(unittest.TestCase):
         self.assertEqual(
             [entry.slug for entry in entries],
             ["qwen3-asr", "qwen3-forced-aligner"],
+        )
+
+    def test_docs_path_defaults_to_single_top_level_markdown_file(self):
+        entry = get_model_doc_entry("mlx_audio.stt.models.cohere_asr")
+
+        self.assertIsNotNone(entry)
+        self.assertEqual(
+            entry.docs_path,
+            f"{REPO_BLOB_MAIN_URL}mlx_audio/stt/models/cohere_asr/README.md",
         )
 
     def test_iter_model_packages_skips_internal_catalog_exclusions(self):

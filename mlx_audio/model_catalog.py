@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import ast
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from typing import Iterable, Literal
 
 Task = Literal["tts", "stt", "sts", "vad"]
+REPO_ROOT = Path(__file__).resolve().parent.parent
+REPO_BLOB_MAIN_URL = "https://github.com/Blaizzy/mlx-audio/blob/main/"
 CATALOG_EXCLUDED_PACKAGES = {
     "mlx_audio.tts.models.llama",
     "mlx_audio.tts.models.qwen3",
@@ -21,7 +23,7 @@ class ModelDocEntry:
     task: Task
     description: str
     repo: str | None
-    docs_path: str
+    docs_path: str | None = None
     languages: tuple[str, ...] = ()
     tags: tuple[str, ...] = ()
     license: str | None = None
@@ -46,7 +48,10 @@ def get_model_doc_entries(package_name: str) -> list[ModelDocEntry]:
     if metadata_file is None:
         return []
 
-    return _parse_model_doc_entry(metadata_file)
+    return [
+        _resolve_doc_path(package_path, entry)
+        for entry in _parse_model_doc_entry(metadata_file)
+    ]
 
 
 def iter_model_packages(categories: Iterable[Task] | None = None) -> Iterable[str]:
@@ -68,11 +73,10 @@ def iter_model_packages(categories: Iterable[Task] | None = None) -> Iterable[st
 
 
 def _package_name_to_path(package_name: str) -> Path:
-    root = Path(__file__).resolve().parent
     parts = package_name.split(".")
     if parts[:1] != ["mlx_audio"]:
         raise ValueError(f"Unsupported package name: {package_name}")
-    return root.joinpath(*parts[1:])
+    return REPO_ROOT.joinpath(*parts)
 
 
 def _find_metadata_file(package_path: Path) -> Path | None:
@@ -163,6 +167,20 @@ def _parse_model_doc_entry(file_path: Path) -> list[ModelDocEntry]:
     return []
 
 
+def _resolve_doc_path(package_path: Path, entry: ModelDocEntry) -> ModelDocEntry:
+    if entry.docs_path:
+        return entry
+
+    markdown_files = sorted(package_path.glob("*.md")) + sorted(
+        package_path.glob("*.MD")
+    )
+    if len(markdown_files) != 1:
+        return entry
+
+    relative_path = markdown_files[0].relative_to(REPO_ROOT).as_posix()
+    return replace(entry, docs_path=f"{REPO_BLOB_MAIN_URL}{relative_path}")
+
+
 def collect_model_doc_entries(
     categories: Iterable[Task] | None = None,
     packages: Iterable[str] | None = None,
@@ -187,6 +205,7 @@ def collect_model_doc_entries(
 __all__ = [
     "CATALOG_EXCLUDED_PACKAGES",
     "ModelDocEntry",
+    "REPO_BLOB_MAIN_URL",
     "Task",
     "collect_model_doc_entries",
     "get_model_doc_entries",

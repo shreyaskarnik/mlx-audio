@@ -22,7 +22,6 @@ ModelConfig.DOCS = ModelDocEntry(
     task="stt",
     description="Multilingual offline ASR with long-form chunking",
     repo="CohereLabs/cohere-transcribe-03-2026",
-    docs_path="https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/stt/models/cohere_asr/README.md",
     languages=("multilingual",),
     pipeline_tag="automatic-speech-recognition",
 )
