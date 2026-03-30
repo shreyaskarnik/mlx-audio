@@ -45,4 +45,8 @@ output/
 # uv
 .build
 claude.md
-.claude/site/
+.claude/
+.playwright-cli/
+
+# Generated spike artifacts
+.generated/legacy-docs-generated/

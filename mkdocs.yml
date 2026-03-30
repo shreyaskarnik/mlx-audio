@@ -58,7 +58,9 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.tabbed:
       alternate_style: true
-  - pymdownx.snippets
+  - pymdownx.snippets:
+      base_path:
+        - .snippets
   - tables
   - attr_list
   - md_in_html

@@ -1,0 +1,80 @@
+[
+  {
+    "slug": "whisper",
+    "name": "Whisper",
+    "task": "stt",
+    "description": "OpenAI's robust STT model",
+    "repo": "mlx-community/whisper-large-v3-turbo-asr-fp16",
+    "docs_path": "models/stt/whisper/",
+    "languages": [
+      "multilingual"
+    ],
+    "tags": [
+      "word-timestamps"
+    ],
+    "license": "mit",
+    "pipeline_tag": "automatic-speech-recognition",
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": true,
+    "diarization": null
+  },
+  {
+    "slug": "kokoro",
+    "name": "Kokoro",
+    "task": "tts",
+    "description": "Fast, high-quality multilingual TTS",
+    "repo": "mlx-community/Kokoro-82M-bf16",
+    "docs_path": "models/tts/kokoro/",
+    "languages": [
+      "en",
+      "ja",
+      "zh",
+      "fr",
+      "es",
+      "it",
+      "pt",
+      "hi"
+    ],
+    "tags": [
+      "multilingual",
+      "preset-voices"
+    ],
+    "license": "apache-2.0",
+    "pipeline_tag": "text-to-speech",
+    "streaming": true,
+    "voice_cloning": false,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "voxtral-tts",
+    "name": "Voxtral TTS",
+    "task": "tts",
+    "description": "Mistral's 4B multilingual TTS",
+    "repo": "mlx-community/Voxtral-4B-TTS-2603-mlx-bf16",
+    "docs_path": "models/tts/voxtral-tts/",
+    "languages": [
+      "en",
+      "fr",
+      "es",
+      "de",
+      "it",
+      "pt",
+      "nl",
+      "ar",
+      "hi"
+    ],
+    "tags": [
+      "mistral-common",
+      "preset-voices",
+      "streaming"
+    ],
+    "license": "cc-by-nc-4.0",
+    "pipeline_tag": "text-to-speech",
+    "streaming": true,
+    "voice_cloning": false,
+    "timestamps": null,
+    "diarization": null
+  }
+]

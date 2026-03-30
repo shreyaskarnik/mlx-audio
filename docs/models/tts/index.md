@@ -2,6 +2,13 @@
 
 MLX-Audio supports a wide range of TTS models optimized for Apple Silicon. Each model offers different tradeoffs between speed, quality, languages, and features.
 
+## Generated Catalog Preview
+
+This table is generated from `ModelConfig.DOCS` metadata in the model packages. The
+prototype currently includes only models that have opted into the metadata catalog.
+
+--8<-- "generated/tts-model-catalog.md"
+
 ## Model Comparison
 
 | Model | Size | Languages | Voice Cloning | Streaming | Key Features |

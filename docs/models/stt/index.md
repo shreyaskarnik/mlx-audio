@@ -6,6 +6,13 @@ title: Speech-to-Text Models
 
 MLX Audio provides a range of speech-to-text models optimized for Apple Silicon, from lightweight English-only models to large multilingual systems with translation capabilities.
 
+## Generated Catalog Preview
+
+This table is generated from `ModelConfig.DOCS` metadata in the model packages. The
+prototype currently includes only models that have opted into the metadata catalog.
+
+--8<-- "generated/stt-model-catalog.md"
+
 ## Model Comparison
 
 | Model | Provider | Parameters | Languages | Streaming | Timestamps | Repo |

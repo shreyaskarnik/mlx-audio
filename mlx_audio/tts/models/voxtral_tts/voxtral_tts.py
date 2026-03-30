@@ -5,12 +5,13 @@ import re
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
+from typing import ClassVar, Optional
 
 import mlx.core as mx
 import mlx.nn as nn
 from tqdm import tqdm
 
+from mlx_audio.model_catalog import ModelDocEntry
 from mlx_audio.tts.models.base import BaseModelArgs, GenerationResult
 
 from .acoustic_head import AcousticTransformerArgs, FlowMatchingAudioTransformer
@@ -46,6 +47,21 @@ VOICE_MAP = {
 
 @dataclass
 class ModelConfig(BaseModelArgs):
+    DOCS: ClassVar[ModelDocEntry] = ModelDocEntry(
+        slug="voxtral-tts",
+        name="Voxtral TTS",
+        task="tts",
+        description="Mistral's 4B multilingual TTS",
+        repo="mlx-community/Voxtral-4B-TTS-2603-mlx-bf16",
+        docs_path="models/tts/voxtral-tts/",
+        languages=("en", "fr", "es", "de", "it", "pt", "nl", "ar", "hi"),
+        license="cc-by-nc-4.0",
+        pipeline_tag="text-to-speech",
+        tags=("mistral-common", "preset-voices", "streaming"),
+        streaming=True,
+        voice_cloning=False,
+    )
+
     model_type: str = "voxtral_tts"
     # LM backbone args (Mistral-like)
     dim: int = 3072

@@ -1,10 +1,12 @@
 import time
 from dataclasses import dataclass
 from numbers import Number
-from typing import Dict, Optional, Union
+from typing import ClassVar, Dict, Optional, Union
 
 import mlx.core as mx
 import mlx.nn as nn
+
+from mlx_audio.model_catalog import ModelDocEntry
 
 from ..base import BaseModelArgs, GenerationResult, check_array_shape
 from .istftnet import Decoder
@@ -37,6 +39,21 @@ def sanitize_lstm_weights(key: str, state_dict: mx.array) -> dict:
 
 @dataclass
 class ModelConfig(BaseModelArgs):
+    DOCS: ClassVar[ModelDocEntry] = ModelDocEntry(
+        slug="kokoro",
+        name="Kokoro",
+        task="tts",
+        description="Fast, high-quality multilingual TTS",
+        repo="mlx-community/Kokoro-82M-bf16",
+        docs_path="models/tts/kokoro/",
+        languages=("en", "ja", "zh", "fr", "es", "it", "pt", "hi"),
+        license="apache-2.0",
+        pipeline_tag="text-to-speech",
+        tags=("multilingual", "preset-voices"),
+        streaming=True,
+        voice_cloning=False,
+    )
+
     istftnet: dict
     dim_in: int
     dropout: float

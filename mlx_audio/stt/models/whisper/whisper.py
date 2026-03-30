@@ -8,7 +8,7 @@ import sys
 import warnings
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional, Tuple, Union
+from typing import ClassVar, List, Optional, Tuple, Union
 
 import mlx.core as mx
 import mlx.nn as nn
@@ -16,6 +16,8 @@ import numpy as np
 import tqdm
 from huggingface_hub import snapshot_download
 from mlx.utils import tree_unflatten
+
+from mlx_audio.model_catalog import ModelDocEntry
 
 from .audio import (
     FRAMES_PER_SECOND,
@@ -268,6 +270,20 @@ class STTOutput:
 
 @dataclass
 class ModelDimensions:
+    DOCS: ClassVar[ModelDocEntry] = ModelDocEntry(
+        slug="whisper",
+        name="Whisper",
+        task="stt",
+        description="OpenAI's robust STT model",
+        repo="mlx-community/whisper-large-v3-turbo-asr-fp16",
+        docs_path="models/stt/whisper/",
+        languages=("multilingual",),
+        license="mit",
+        pipeline_tag="automatic-speech-recognition",
+        tags=("word-timestamps",),
+        timestamps=True,
+    )
+
     n_mels: int
     n_audio_ctx: int
     n_audio_state: int
