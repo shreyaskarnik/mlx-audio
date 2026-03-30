@@ -6,6 +6,12 @@ title: Voice Activity Detection Models
 
 MLX Audio provides voice activity detection and speaker diarization models for identifying who is speaking when, as well as endpoint detection for conversational turn-taking.
 
+## Generated Catalog Preview
+
+This table is generated from `ModelConfig.DOCS` metadata in the model packages.
+
+--8<-- "generated/vad-model-catalog.md"
+
 | Model | Provider | Use Case | Speakers | Streaming | Repo |
 |-------|----------|----------|----------|-----------|------|
 | [**Sortformer v1**](#sortformer-v1) | NVIDIA | Speaker diarization | Up to 4 | Basic | [mlx-community/diar_sortformer_4spk-v1-fp16](https://huggingface.co/mlx-community/diar_sortformer_4spk-v1-fp16) |

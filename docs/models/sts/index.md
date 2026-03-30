@@ -6,6 +6,12 @@ title: Speech-to-Speech Models
 
 MLX Audio provides speech-to-speech models for audio source separation, speech enhancement, and multimodal voice interaction.
 
+## Generated Catalog Preview
+
+This table is generated from `ModelConfig.DOCS` metadata in the model packages.
+
+--8<-- "generated/sts-model-catalog.md"
+
 | Model | Provider | Use Case | Repo |
 |-------|----------|----------|------|
 | [**SAM-Audio**](#sam-audio) | Meta | Text-guided source separation | [mlx-community/sam-audio-large](https://huggingface.co/mlx-community/sam-audio-large) |

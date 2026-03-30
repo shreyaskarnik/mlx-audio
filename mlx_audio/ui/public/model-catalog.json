@@ -1,5 +1,416 @@
 [
   {
+    "slug": "deepfilternet",
+    "name": "DeepFilterNet",
+    "task": "sts",
+    "description": "Speech enhancement and noise suppression",
+    "repo": "mlx-community/DeepFilterNet-mlx",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/sts/models/deepfilternet/README.md",
+    "languages": [],
+    "tags": [
+      "speech-enhancement",
+      "streaming"
+    ],
+    "license": null,
+    "pipeline_tag": null,
+    "streaming": true,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "lfm2-5-audio",
+    "name": "Liquid2.5-Audio",
+    "task": "sts",
+    "description": "Multimodal speech-to-speech, TTS, and ASR in one model",
+    "repo": "mlx-community/LFM2.5-Audio-1.5B-4bit",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/sts/models/lfm_audio/README.md",
+    "languages": [],
+    "tags": [
+      "multimodal"
+    ],
+    "license": null,
+    "pipeline_tag": null,
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "moshi",
+    "name": "Moshi",
+    "task": "sts",
+    "description": "Full-duplex voice conversation model",
+    "repo": "kyutai/moshiko-mlx-q4",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/sts/models/moshi/README.md",
+    "languages": [],
+    "tags": [
+      "conversation"
+    ],
+    "license": null,
+    "pipeline_tag": null,
+    "streaming": true,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "mossformer2-se",
+    "name": "MossFormer2 SE",
+    "task": "sts",
+    "description": "Speech enhancement and noise removal",
+    "repo": "starkdmi/MossFormer2_SE_48K_MLX",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/sts/models/mossformer2_se/README.md",
+    "languages": [],
+    "tags": [
+      "speech-enhancement"
+    ],
+    "license": null,
+    "pipeline_tag": null,
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "sam-audio",
+    "name": "SAM-Audio",
+    "task": "sts",
+    "description": "Text-guided audio source separation",
+    "repo": "mlx-community/sam-audio-large",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/sts/models/sam_audio/README.md",
+    "languages": [],
+    "tags": [
+      "source-separation"
+    ],
+    "license": null,
+    "pipeline_tag": null,
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "canary",
+    "name": "Canary",
+    "task": "stt",
+    "description": "Multilingual ASR with speech translation",
+    "repo": null,
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/stt/models/canary/README.md",
+    "languages": [
+      "multilingual"
+    ],
+    "tags": [],
+    "license": null,
+    "pipeline_tag": "automatic-speech-recognition",
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "cohere-transcribe",
+    "name": "Cohere Transcribe",
+    "task": "stt",
+    "description": "Multilingual offline ASR with long-form chunking",
+    "repo": "CohereLabs/cohere-transcribe-03-2026",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/stt/models/cohere_asr/README.md",
+    "languages": [
+      "multilingual"
+    ],
+    "tags": [],
+    "license": null,
+    "pipeline_tag": "automatic-speech-recognition",
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "fireredasr2",
+    "name": "FireRedASR2",
+    "task": "stt",
+    "description": "Bilingual Chinese and English ASR",
+    "repo": "mlx-community/FireRedASR2-AED-mlx",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/stt/models/fireredasr2/README.md",
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "tags": [],
+    "license": null,
+    "pipeline_tag": "automatic-speech-recognition",
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "glm-asr",
+    "name": "GLM-ASR",
+    "task": "stt",
+    "description": "Speech recognition with a Whisper encoder and GLM decoder",
+    "repo": null,
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/tree/main/mlx_audio/stt/models/glmasr",
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "tags": [],
+    "license": null,
+    "pipeline_tag": "automatic-speech-recognition",
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "granite-speech",
+    "name": "Granite Speech",
+    "task": "stt",
+    "description": "ASR and speech translation from IBM Granite",
+    "repo": "ibm-granite/granite-4.0-1b-speech",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/stt/models/granite_speech/README.md",
+    "languages": [
+      "en",
+      "fr",
+      "de",
+      "es",
+      "pt",
+      "ja"
+    ],
+    "tags": [],
+    "license": null,
+    "pipeline_tag": "automatic-speech-recognition",
+    "streaming": true,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "lasr-ctc",
+    "name": "LASR-CTC",
+    "task": "stt",
+    "description": "CTC-based speech recognition with a LASR encoder",
+    "repo": null,
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/tree/main/mlx_audio/stt/models/lasr_ctc",
+    "languages": [],
+    "tags": [],
+    "license": null,
+    "pipeline_tag": "automatic-speech-recognition",
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "mms",
+    "name": "MMS",
+    "task": "stt",
+    "description": "Massively multilingual speech recognition",
+    "repo": "facebook/mms-1b-all",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/stt/models/mms/README.md",
+    "languages": [
+      "multilingual"
+    ],
+    "tags": [],
+    "license": null,
+    "pipeline_tag": "automatic-speech-recognition",
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "moonshine",
+    "name": "Moonshine",
+    "task": "stt",
+    "description": "Lightweight English ASR",
+    "repo": "UsefulSensors/moonshine-base",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/stt/models/moonshine/README.md",
+    "languages": [
+      "en"
+    ],
+    "tags": [],
+    "license": null,
+    "pipeline_tag": "automatic-speech-recognition",
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "parakeet",
+    "name": "Parakeet",
+    "task": "stt",
+    "description": "Fast multilingual ASR with streaming support",
+    "repo": "mlx-community/parakeet-tdt-0.6b-v3",
+    "docs_path": "models/stt/parakeet/",
+    "languages": [
+      "multilingual"
+    ],
+    "tags": [
+      "word-timestamps",
+      "streaming"
+    ],
+    "license": null,
+    "pipeline_tag": "automatic-speech-recognition",
+    "streaming": true,
+    "voice_cloning": null,
+    "timestamps": true,
+    "diarization": null
+  },
+  {
+    "slug": "qwen2-audio",
+    "name": "Qwen2-Audio",
+    "task": "stt",
+    "description": "Audio-language model for transcription, translation, and audio understanding",
+    "repo": "mlx-community/Qwen2-Audio-7B-Instruct-4bit",
+    "docs_path": "models/stt/qwen2-audio/",
+    "languages": [
+      "multilingual"
+    ],
+    "tags": [
+      "translation",
+      "audio-understanding"
+    ],
+    "license": null,
+    "pipeline_tag": "automatic-speech-recognition",
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "qwen3-asr",
+    "name": "Qwen3-ASR",
+    "task": "stt",
+    "description": "Multilingual ASR with streaming support",
+    "repo": "mlx-community/Qwen3-ASR-1.7B-8bit",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/stt/models/qwen3_asr/README.md",
+    "languages": [
+      "zh",
+      "en",
+      "ja",
+      "ko",
+      "multilingual"
+    ],
+    "tags": [
+      "streaming"
+    ],
+    "license": null,
+    "pipeline_tag": "automatic-speech-recognition",
+    "streaming": true,
+    "voice_cloning": null,
+    "timestamps": true,
+    "diarization": null
+  },
+  {
+    "slug": "qwen3-forced-aligner",
+    "name": "Qwen3-ForcedAligner",
+    "task": "stt",
+    "description": "Word-level forced alignment for speech transcripts",
+    "repo": "mlx-community/Qwen3-ForcedAligner-0.6B-8bit",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/stt/models/qwen3_asr/README.md",
+    "languages": [
+      "zh",
+      "en",
+      "ja",
+      "ko",
+      "multilingual"
+    ],
+    "tags": [
+      "alignment",
+      "word-timestamps"
+    ],
+    "license": null,
+    "pipeline_tag": "automatic-speech-recognition",
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": true,
+    "diarization": null
+  },
+  {
+    "slug": "sensevoice",
+    "name": "SenseVoice",
+    "task": "stt",
+    "description": "Multilingual speech recognition with emotion and event detection",
+    "repo": "mlx-community/SenseVoiceSmall",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/stt/models/sensevoice/README.md",
+    "languages": [
+      "multilingual"
+    ],
+    "tags": [
+      "emotion-detection",
+      "event-detection"
+    ],
+    "license": null,
+    "pipeline_tag": "automatic-speech-recognition",
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "vibevoice-asr",
+    "name": "VibeVoice-ASR",
+    "task": "stt",
+    "description": "Multilingual ASR with diarization support",
+    "repo": "mlx-community/VibeVoice-ASR-bf16",
+    "docs_path": "https://huggingface.co/mlx-community/VibeVoice-ASR-bf16",
+    "languages": [
+      "multilingual"
+    ],
+    "tags": [
+      "diarization",
+      "streaming"
+    ],
+    "license": null,
+    "pipeline_tag": "automatic-speech-recognition",
+    "streaming": true,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": true
+  },
+  {
+    "slug": "voxtral",
+    "name": "Voxtral",
+    "task": "stt",
+    "description": "Multilingual speech model from Mistral",
+    "repo": "mlx-community/Voxtral-Mini-3B-2507-bf16",
+    "docs_path": "https://huggingface.co/mlx-community/Voxtral-Mini-3B-2507-bf16",
+    "languages": [
+      "multilingual"
+    ],
+    "tags": [],
+    "license": null,
+    "pipeline_tag": "automatic-speech-recognition",
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "voxtral-realtime",
+    "name": "Voxtral Realtime",
+    "task": "stt",
+    "description": "Streaming multilingual speech-to-text",
+    "repo": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "docs_path": "models/stt/voxtral-realtime/",
+    "languages": [
+      "multilingual"
+    ],
+    "tags": [
+      "streaming"
+    ],
+    "license": null,
+    "pipeline_tag": "automatic-speech-recognition",
+    "streaming": true,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
     "slug": "whisper",
     "name": "Whisper",
     "task": "stt",
@@ -17,6 +428,229 @@
     "streaming": null,
     "voice_cloning": null,
     "timestamps": true,
+    "diarization": null
+  },
+  {
+    "slug": "bark",
+    "name": "Bark",
+    "task": "tts",
+    "description": "Promptable multilingual TTS with preset voice prompts",
+    "repo": null,
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/tree/main/mlx_audio/tts/models/bark",
+    "languages": [
+      "multilingual"
+    ],
+    "tags": [
+      "prompt-voices"
+    ],
+    "license": null,
+    "pipeline_tag": "text-to-speech",
+    "streaming": null,
+    "voice_cloning": false,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "chatterbox",
+    "name": "Chatterbox",
+    "task": "tts",
+    "description": "Expressive multilingual TTS with voice cloning",
+    "repo": "mlx-community/chatterbox-fp16",
+    "docs_path": "models/tts/chatterbox/",
+    "languages": [
+      "en",
+      "es",
+      "fr",
+      "de",
+      "it",
+      "pt",
+      "pl",
+      "tr",
+      "ru",
+      "nl",
+      "cs",
+      "ar",
+      "zh",
+      "ja",
+      "hu",
+      "ko"
+    ],
+    "tags": [
+      "expressive",
+      "voice-cloning"
+    ],
+    "license": null,
+    "pipeline_tag": "text-to-speech",
+    "streaming": null,
+    "voice_cloning": true,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "chatterbox-turbo",
+    "name": "Chatterbox Turbo",
+    "task": "tts",
+    "description": "Low-latency expressive TTS with voice cloning and streaming",
+    "repo": "ResembleAI/chatterbox-turbo",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/tree/main/mlx_audio/tts/models/chatterbox_turbo",
+    "languages": [
+      "en"
+    ],
+    "tags": [
+      "voice-cloning",
+      "streaming",
+      "low-latency"
+    ],
+    "license": null,
+    "pipeline_tag": "text-to-speech",
+    "streaming": true,
+    "voice_cloning": true,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "csm",
+    "name": "CSM",
+    "task": "tts",
+    "description": "Conversational speech model with voice cloning",
+    "repo": "mlx-community/csm-1b",
+    "docs_path": "models/tts/csm/",
+    "languages": [
+      "en"
+    ],
+    "tags": [
+      "voice-cloning",
+      "streaming",
+      "conversational"
+    ],
+    "license": null,
+    "pipeline_tag": "text-to-speech",
+    "streaming": true,
+    "voice_cloning": true,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "dia",
+    "name": "Dia",
+    "task": "tts",
+    "description": "Dialogue-focused TTS with speaker tags",
+    "repo": "mlx-community/Dia-1.6B-fp16",
+    "docs_path": "models/tts/dia/",
+    "languages": [
+      "en"
+    ],
+    "tags": [
+      "dialogue",
+      "multi-speaker"
+    ],
+    "license": null,
+    "pipeline_tag": "text-to-speech",
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "echo-tts",
+    "name": "Echo TTS",
+    "task": "tts",
+    "description": "Diffusion-based TTS with fast voice cloning",
+    "repo": "mlx-community/echo-tts-base",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/tts/models/echo_tts/README.md",
+    "languages": [
+      "en"
+    ],
+    "tags": [
+      "diffusion",
+      "voice-cloning"
+    ],
+    "license": null,
+    "pipeline_tag": "text-to-speech",
+    "streaming": null,
+    "voice_cloning": true,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "fish-speech",
+    "name": "Fish Speech",
+    "task": "tts",
+    "description": "Voice cloning and multi-speaker TTS with inline control tags",
+    "repo": "mlx-community/fish-audio-s2-pro",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/tts/models/fish_qwen3_omni/README.md",
+    "languages": [
+      "multilingual"
+    ],
+    "tags": [
+      "voice-cloning",
+      "multi-speaker"
+    ],
+    "license": null,
+    "pipeline_tag": "text-to-speech",
+    "streaming": null,
+    "voice_cloning": true,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "indextts",
+    "name": "IndexTTS",
+    "task": "tts",
+    "description": "Zero-shot TTS with voice cloning and BigVGAN decoding",
+    "repo": "mlx-community/IndexTTS",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/tree/main/mlx_audio/tts/models/indextts",
+    "languages": [
+      "multilingual"
+    ],
+    "tags": [
+      "voice-cloning"
+    ],
+    "license": null,
+    "pipeline_tag": "text-to-speech",
+    "streaming": null,
+    "voice_cloning": true,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "irodori-tts",
+    "name": "Irodori TTS",
+    "task": "tts",
+    "description": "Japanese TTS with DiT and DACVAE decoding",
+    "repo": "mlx-community/Irodori-TTS-500M-fp16",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/tts/models/irodori_tts/README.md",
+    "languages": [
+      "ja"
+    ],
+    "tags": [
+      "voice-cloning"
+    ],
+    "license": null,
+    "pipeline_tag": "text-to-speech",
+    "streaming": null,
+    "voice_cloning": true,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "kitten-tts",
+    "name": "KittenTTS",
+    "task": "tts",
+    "description": "Small English TTS with preset expressive voices",
+    "repo": null,
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/tree/main/mlx_audio/tts/models/kitten_tts",
+    "languages": [
+      "en"
+    ],
+    "tags": [
+      "preset-voices"
+    ],
+    "license": null,
+    "pipeline_tag": "text-to-speech",
+    "streaming": null,
+    "voice_cloning": false,
+    "timestamps": null,
     "diarization": null
   },
   {
@@ -44,6 +678,255 @@
     "pipeline_tag": "text-to-speech",
     "streaming": true,
     "voice_cloning": false,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "kugelaudio",
+    "name": "KugelAudio",
+    "task": "tts",
+    "description": "7B multilingual TTS for European languages with diffusion decoding",
+    "repo": "kugelaudio/kugelaudio-0-open",
+    "docs_path": "models/tts/kugelaudio/",
+    "languages": [
+      "en",
+      "de",
+      "fr",
+      "es",
+      "it",
+      "pt",
+      "nl",
+      "pl",
+      "ru",
+      "uk",
+      "cs",
+      "ro",
+      "hu",
+      "sv",
+      "da",
+      "fi",
+      "no",
+      "el",
+      "bg",
+      "sk",
+      "hr",
+      "sr",
+      "tr"
+    ],
+    "tags": [],
+    "license": "mit",
+    "pipeline_tag": "text-to-speech",
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "ming-omni-bailingmm",
+    "name": "Ming Omni TTS (BailingMM)",
+    "task": "tts",
+    "description": "Multimodal generation with voice cloning and style control",
+    "repo": "mlx-community/Ming-omni-tts-16.8B-A3B-bf16",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/tts/models/bailingmm/README.md",
+    "languages": [
+      "en",
+      "zh"
+    ],
+    "tags": [
+      "multimodal",
+      "voice-cloning"
+    ],
+    "license": null,
+    "pipeline_tag": "text-to-speech",
+    "streaming": null,
+    "voice_cloning": true,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "ming-omni-dense",
+    "name": "Ming Omni TTS (Dense)",
+    "task": "tts",
+    "description": "Lightweight Ming Omni variant for voice cloning and style control",
+    "repo": "mlx-community/Ming-omni-tts-0.5B-bf16",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/tts/models/dense/README.md",
+    "languages": [
+      "en",
+      "zh"
+    ],
+    "tags": [
+      "multimodal",
+      "voice-cloning"
+    ],
+    "license": null,
+    "pipeline_tag": "text-to-speech",
+    "streaming": null,
+    "voice_cloning": true,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "outetts",
+    "name": "OuteTTS",
+    "task": "tts",
+    "description": "Efficient text-to-speech for Apple Silicon",
+    "repo": "mlx-community/OuteTTS-1.0-0.6B-fp16",
+    "docs_path": "https://huggingface.co/mlx-community/OuteTTS-1.0-0.6B-fp16",
+    "languages": [
+      "en"
+    ],
+    "tags": [],
+    "license": null,
+    "pipeline_tag": "text-to-speech",
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "pocket-tts",
+    "name": "PocketTTS",
+    "task": "tts",
+    "description": "Compact streaming TTS with optional voice conditioning",
+    "repo": null,
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/tree/main/mlx_audio/tts/models/pocket_tts",
+    "languages": [
+      "multilingual"
+    ],
+    "tags": [
+      "streaming",
+      "voice-cloning"
+    ],
+    "license": null,
+    "pipeline_tag": "text-to-speech",
+    "streaming": true,
+    "voice_cloning": true,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "qwen3-tts",
+    "name": "Qwen3-TTS",
+    "task": "tts",
+    "description": "Multilingual TTS with voice cloning and voice design",
+    "repo": "mlx-community/Qwen3-TTS-12Hz-1.7B-VoiceDesign-bf16",
+    "docs_path": "models/tts/qwen3-tts/",
+    "languages": [
+      "zh",
+      "en",
+      "ja",
+      "ko",
+      "multilingual"
+    ],
+    "tags": [
+      "voice-cloning",
+      "voice-design",
+      "streaming"
+    ],
+    "license": null,
+    "pipeline_tag": "text-to-speech",
+    "streaming": true,
+    "voice_cloning": true,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "soprano",
+    "name": "Soprano",
+    "task": "tts",
+    "description": "High-quality English TTS",
+    "repo": "mlx-community/Soprano-1.1-80M-bf16",
+    "docs_path": "https://huggingface.co/mlx-community/Soprano-1.1-80M-bf16",
+    "languages": [
+      "en"
+    ],
+    "tags": [],
+    "license": null,
+    "pipeline_tag": "text-to-speech",
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "spark-tts",
+    "name": "Spark",
+    "task": "tts",
+    "description": "SparkTTS model for English and Chinese speech generation",
+    "repo": "mlx-community/Spark-TTS-0.5B-bf16",
+    "docs_path": "https://huggingface.co/mlx-community/Spark-TTS-0.5B-bf16",
+    "languages": [
+      "en",
+      "zh"
+    ],
+    "tags": [],
+    "license": null,
+    "pipeline_tag": "text-to-speech",
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "tada",
+    "name": "TADA",
+    "task": "tts",
+    "description": "Text-Acoustic Dual Alignment TTS with voice cloning",
+    "repo": "HumeAI/mlx-tada-1b",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/tts/models/tada/README.md",
+    "languages": [
+      "en",
+      "multilingual"
+    ],
+    "tags": [
+      "voice-cloning"
+    ],
+    "license": null,
+    "pipeline_tag": "text-to-speech",
+    "streaming": null,
+    "voice_cloning": true,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "vibevoice",
+    "name": "VibeVoice",
+    "task": "tts",
+    "description": "Streaming multilingual TTS with cached voice conditioning",
+    "repo": null,
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/tree/main/mlx_audio/tts/models/vibevoice",
+    "languages": [
+      "multilingual"
+    ],
+    "tags": [
+      "streaming",
+      "voice-cloning"
+    ],
+    "license": null,
+    "pipeline_tag": "text-to-speech",
+    "streaming": true,
+    "voice_cloning": true,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "voxcpm",
+    "name": "VoxCPM",
+    "task": "tts",
+    "description": "Multilingual TTS with voice cloning and 44.1kHz audio output",
+    "repo": null,
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/tree/main/mlx_audio/tts/models/voxcpm",
+    "languages": [
+      "multilingual"
+    ],
+    "tags": [
+      "voice-cloning",
+      "high-sample-rate"
+    ],
+    "license": null,
+    "pipeline_tag": "text-to-speech",
+    "streaming": null,
+    "voice_cloning": true,
     "timestamps": null,
     "diarization": null
   },
@@ -76,5 +959,60 @@
     "voice_cloning": false,
     "timestamps": null,
     "diarization": null
+  },
+  {
+    "slug": "smart-turn",
+    "name": "Smart Turn",
+    "task": "vad",
+    "description": "Endpoint detection for conversational turn-taking",
+    "repo": "mlx-community/smart-turn-v3",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/vad/models/smart_turn/README.md",
+    "languages": [],
+    "tags": [
+      "endpoint-detection"
+    ],
+    "license": null,
+    "pipeline_tag": null,
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": null
+  },
+  {
+    "slug": "sortformer-v1",
+    "name": "Sortformer v1",
+    "task": "vad",
+    "description": "End-to-end speaker diarization for up to four speakers",
+    "repo": "mlx-community/diar_sortformer_4spk-v1-fp32",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/vad/models/sortformer/README.md",
+    "languages": [],
+    "tags": [
+      "speaker-diarization"
+    ],
+    "license": null,
+    "pipeline_tag": null,
+    "streaming": null,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": true
+  },
+  {
+    "slug": "sortformer-v2-1",
+    "name": "Sortformer v2.1",
+    "task": "vad",
+    "description": "Streaming speaker diarization with AOSC compression",
+    "repo": "mlx-community/diar_streaming_sortformer_4spk-v2.1-fp32",
+    "docs_path": "https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/vad/models/sortformer/README.md",
+    "languages": [],
+    "tags": [
+      "speaker-diarization",
+      "streaming"
+    ],
+    "license": null,
+    "pipeline_tag": null,
+    "streaming": true,
+    "voice_cloning": null,
+    "timestamps": null,
+    "diarization": true
   }
 ]

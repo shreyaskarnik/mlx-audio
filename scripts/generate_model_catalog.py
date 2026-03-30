@@ -16,16 +16,33 @@ UI_PUBLIC_DIR = REPO_ROOT / "mlx_audio" / "ui" / "public"
 
 LANGUAGE_LABELS = {
     "ar": "AR",
+    "bg": "BG",
+    "cs": "CS",
+    "da": "DA",
     "de": "DE",
+    "el": "EL",
     "en": "EN",
     "es": "ES",
+    "fi": "FI",
     "fr": "FR",
+    "hr": "HR",
+    "hu": "HU",
     "hi": "HI",
     "it": "IT",
     "ja": "JA",
+    "ko": "KO",
     "multilingual": "Multilingual",
     "nl": "NL",
+    "no": "NO",
+    "pl": "PL",
     "pt": "PT",
+    "ro": "RO",
+    "ru": "RU",
+    "sk": "SK",
+    "sr": "SR",
+    "sv": "SV",
+    "tr": "TR",
+    "uk": "UK",
     "zh": "ZH",
 }
 
@@ -37,11 +54,15 @@ def yes_no(value: bool | None) -> str:
 
 
 def docs_link(entry: ModelDocEntry) -> str:
+    if entry.docs_path.startswith(("http://", "https://")):
+        return f"[**{entry.name}**]({entry.docs_path})"
     page_name = Path(entry.docs_path).name
     return f"[**{entry.name}**]({page_name}.md)"
 
 
 def repo_link(entry: ModelDocEntry) -> str:
+    if not entry.repo:
+        return "--"
     return f"[{entry.repo}](https://huggingface.co/{entry.repo})"
 
 
@@ -79,6 +100,33 @@ def render_stt_table(entries: list[ModelDocEntry]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def render_sts_table(entries: list[ModelDocEntry]) -> str:
+    lines = [
+        "<!-- AUTO-GENERATED: do not edit by hand. Run scripts/generate_model_catalog.py -->",
+        "",
+        "| Model | Description | Repo |",
+        "|-------|-------------|------|",
+    ]
+    for entry in entries:
+        lines.append(f"| {docs_link(entry)} | {entry.description} | {repo_link(entry)} |")
+    return "\n".join(lines) + "\n"
+
+
+def render_vad_table(entries: list[ModelDocEntry]) -> str:
+    lines = [
+        "<!-- AUTO-GENERATED: do not edit by hand. Run scripts/generate_model_catalog.py -->",
+        "",
+        "| Model | Description | Streaming | Diarization | Repo |",
+        "|-------|-------------|:---------:|:-----------:|------|",
+    ]
+    for entry in entries:
+        lines.append(
+            f"| {docs_link(entry)} | {entry.description} | "
+            f"{yes_no(entry.streaming)} | {yes_no(entry.diarization)} | {repo_link(entry)} |"
+        )
+    return "\n".join(lines) + "\n"
+
+
 def main() -> None:
     entries = collect_model_doc_entries(ignore_import_errors=False)
     DOCS_SNIPPETS_DIR.mkdir(parents=True, exist_ok=True)
@@ -95,6 +143,8 @@ def main() -> None:
 
     tts_entries = [entry for entry in entries if entry.task == "tts"]
     stt_entries = [entry for entry in entries if entry.task == "stt"]
+    sts_entries = [entry for entry in entries if entry.task == "sts"]
+    vad_entries = [entry for entry in entries if entry.task == "vad"]
 
     (DOCS_SNIPPETS_DIR / "tts-model-catalog.md").write_text(
         render_tts_table(tts_entries),
@@ -102,6 +152,14 @@ def main() -> None:
     )
     (DOCS_SNIPPETS_DIR / "stt-model-catalog.md").write_text(
         render_stt_table(stt_entries),
+        encoding="utf-8",
+    )
+    (DOCS_SNIPPETS_DIR / "sts-model-catalog.md").write_text(
+        render_sts_table(sts_entries),
+        encoding="utf-8",
+    )
+    (DOCS_SNIPPETS_DIR / "vad-model-catalog.md").write_text(
+        render_vad_table(vad_entries),
         encoding="utf-8",
     )
 

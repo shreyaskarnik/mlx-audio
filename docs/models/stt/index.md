@@ -8,8 +8,7 @@ MLX Audio provides a range of speech-to-text models optimized for Apple Silicon,
 
 ## Generated Catalog Preview
 
-This table is generated from `ModelConfig.DOCS` metadata in the model packages. The
-prototype currently includes only models that have opted into the metadata catalog.
+This table is generated from `ModelConfig.DOCS` metadata in the model packages.
 
 --8<-- "generated/stt-model-catalog.md"
 
