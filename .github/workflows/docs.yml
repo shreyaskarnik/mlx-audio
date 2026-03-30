@@ -23,6 +23,11 @@ jobs:
       - name: Install package and docs dependencies
         run: pip install -e ".[all,docs]"
 
+      - name: Ensure generated model catalog is up to date
+        run: |
+          python scripts/generate_model_catalog.py
+          git diff --exit-code -- .generated/model-catalog.json .snippets/generated/ mlx_audio/ui/public/model-catalog.json
+
       - name: Build docs
         run: mkdocs build --strict
 

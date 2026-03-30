@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from mlx_audio.model_catalog import ModelDocEntry, collect_model_doc_entries
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
 DOCS_SNIPPETS_DIR = REPO_ROOT / ".snippets" / "generated"
 GENERATED_DIR = REPO_ROOT / ".generated"
 UI_PUBLIC_DIR = REPO_ROOT / "mlx_audio" / "ui" / "public"

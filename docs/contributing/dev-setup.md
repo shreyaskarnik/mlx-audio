@@ -95,6 +95,17 @@ black --check .
 black .
 ```
 
+## Pre-commit Hooks
+
+Install the Git hooks once per clone:
+
+```bash
+pre-commit install
+```
+
+The local hooks format Python files and regenerate the model catalog artifacts used by
+the docs/UI spike.
+
 ## Linting
 
 ```bash

@@ -9,3 +9,10 @@ repos:
     -   id: isort
         args:
             - --profile=black
+-   repo: local
+    hooks:
+    -   id: generate-model-catalog
+        name: generate model catalog
+        entry: python scripts/generate_model_catalog.py
+        language: python
+        pass_filenames: false
