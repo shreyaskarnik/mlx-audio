@@ -101,6 +101,8 @@ dev = [
     "black>=24.2.0",
     "isort>=5.13.2",
     "pre-commit>=3.7.0",
+    "questionary>=2.1.0",
+    "rich>=14.0.0",
 ]
 
 [project.scripts]
