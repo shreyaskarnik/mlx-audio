@@ -17,8 +17,6 @@ from mlx_audio.model_catalog import (
 )
 
 DOCS_MODELS_DIR = REPO_ROOT / "docs" / "models"
-DOCS_SNIPPETS_DIR = REPO_ROOT / ".snippets" / "generated"
-GENERATED_DIR = REPO_ROOT / ".generated"
 UI_PUBLIC_DIR = REPO_ROOT / "mlx_audio" / "ui" / "public"
 DOCS_INDEX_FILES = [
     DOCS_MODELS_DIR / "index.md",
@@ -495,38 +493,9 @@ def write_model_indexes(entries: list[ModelDocEntry]) -> None:
         )
 
 
-def write_legacy_snippets(entries: list[ModelDocEntry]) -> None:
-    DOCS_SNIPPETS_DIR.mkdir(parents=True, exist_ok=True)
-    (DOCS_SNIPPETS_DIR / "tts-model-catalog.md").write_text(
-        "<!-- AUTO-GENERATED: do not edit by hand. Run scripts/generate_model_catalog.py -->\n\n"
-        + render_tts_table(task_entries(entries, "tts"), "generated"),
-        encoding="utf-8",
-    )
-    (DOCS_SNIPPETS_DIR / "stt-model-catalog.md").write_text(
-        "<!-- AUTO-GENERATED: do not edit by hand. Run scripts/generate_model_catalog.py -->\n\n"
-        + render_stt_table(task_entries(entries, "stt"), "generated"),
-        encoding="utf-8",
-    )
-    (DOCS_SNIPPETS_DIR / "sts-model-catalog.md").write_text(
-        "<!-- AUTO-GENERATED: do not edit by hand. Run scripts/generate_model_catalog.py -->\n\n"
-        + render_sts_table(task_entries(entries, "sts"), "generated"),
-        encoding="utf-8",
-    )
-    (DOCS_SNIPPETS_DIR / "vad-model-catalog.md").write_text(
-        "<!-- AUTO-GENERATED: do not edit by hand. Run scripts/generate_model_catalog.py -->\n\n"
-        + render_vad_table(task_entries(entries, "vad"), "generated"),
-        encoding="utf-8",
-    )
-
-
 def write_catalog(entries: list[ModelDocEntry]) -> None:
-    GENERATED_DIR.mkdir(parents=True, exist_ok=True)
     UI_PUBLIC_DIR.mkdir(parents=True, exist_ok=True)
     catalog = [entry.to_dict() for entry in entries]
-    (GENERATED_DIR / "model-catalog.json").write_text(
-        json.dumps(catalog, indent=2) + "\n",
-        encoding="utf-8",
-    )
     (UI_PUBLIC_DIR / "model-catalog.json").write_text(
         json.dumps(catalog, indent=2) + "\n",
         encoding="utf-8",
@@ -536,7 +505,6 @@ def write_catalog(entries: list[ModelDocEntry]) -> None:
 def main() -> None:
     entries = collect_model_doc_entries(ignore_import_errors=False)
     write_catalog(entries)
-    write_legacy_snippets(entries)
     write_model_pages(entries)
     write_model_indexes(entries)
 

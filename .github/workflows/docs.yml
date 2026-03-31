@@ -27,8 +27,6 @@ jobs:
         run: |
           python scripts/generate_model_catalog.py
           git diff --exit-code -- \
-            .generated/model-catalog.json \
-            .snippets/generated/ \
             mlx_audio/ui/public/model-catalog.json \
             docs/models/index.md \
             docs/models/tts/index.md \

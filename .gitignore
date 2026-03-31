@@ -47,6 +47,3 @@ output/
 claude.md
 .claude/
 .playwright-cli/
-
-# Generated spike artifacts
-.generated/legacy-docs-generated/
