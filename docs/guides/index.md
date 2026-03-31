@@ -20,7 +20,7 @@ Practical how-to guides for common mlx-audio workflows.
 
     [:octicons-arrow-right-24: Voice Cloning Guide](voice-cloning.md)
 
--   :material-compress:{ .lg .middle } **Quantization**
+-   :material-memory:{ .lg .middle } **Quantization**
 
     ---
 

@@ -1,67 +1,32 @@
----
-title: Speech-to-Text Models
----
+<!-- AUTO-GENERATED: do not edit by hand. Run scripts/generate_model_catalog.py -->
 
-# Speech-to-Text (STT) Models
+# Speech-to-Text Models
 
-MLX Audio provides a range of speech-to-text models optimized for Apple Silicon, from lightweight English-only models to large multilingual systems with translation capabilities.
+MLX Audio provides speech-to-text models ranging from lightweight English-only recognizers to multilingual systems with streaming, timestamps, translation, and diarization support.
 
-## Generated Catalog Preview
+## Model Catalog
 
-This table is generated from `ModelConfig.DOCS` metadata in the model packages.
-
---8<-- "generated/stt-model-catalog.md"
-
-## Model Comparison
-
-| Model | Provider | Parameters | Languages | Streaming | Timestamps | Repo |
-|-------|----------|-----------|-----------|-----------|------------|------|
-| [**Whisper**](whisper.md) | OpenAI | Various | 99+ | -- | Segment + Word | [mlx-community/whisper-large-v3-turbo-asr-fp16](https://huggingface.co/mlx-community/whisper-large-v3-turbo-asr-fp16) |
-| **Distil-Whisper** | HuggingFace | Various | EN | -- | Segment | [distil-whisper/distil-large-v3](https://huggingface.co/distil-whisper/distil-large-v3) |
-| [**Parakeet**](parakeet.md) | NVIDIA | 0.6B | EN (v2), 25 EU (v3) | Yes | Sentence + Word | [mlx-community/parakeet-tdt-0.6b-v3](https://huggingface.co/mlx-community/parakeet-tdt-0.6b-v3) |
-| [**Voxtral Realtime**](voxtral-realtime.md) | Mistral | 4B | Multiple | Yes | -- | [4bit](https://huggingface.co/mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit), [fp16](https://huggingface.co/mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16) |
-| **Qwen3-ASR** | Alibaba | 0.6B / 1.7B | ZH, EN, JA, KO + more | Yes | Segment | [mlx-community/Qwen3-ASR-1.7B-8bit](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-8bit) |
-| **Qwen3-ForcedAligner** | Alibaba | 0.6B | ZH, EN, JA, KO + more | -- | Word-level | [mlx-community/Qwen3-ForcedAligner-0.6B-8bit](https://huggingface.co/mlx-community/Qwen3-ForcedAligner-0.6B-8bit) |
-| **VibeVoice-ASR** | Microsoft | 9B | Multiple | Yes | Segment | [mlx-community/VibeVoice-ASR-bf16](https://huggingface.co/mlx-community/VibeVoice-ASR-bf16) |
-| **Voxtral** | Mistral | 3B | Multiple | -- | -- | [mlx-community/Voxtral-Mini-3B-2507-bf16](https://huggingface.co/mlx-community/Voxtral-Mini-3B-2507-bf16) |
-| **Cohere Transcribe** | Cohere | 2B | 14 languages | -- | Segment | [CohereLabs/cohere-transcribe-03-2026](https://huggingface.co/CohereLabs/cohere-transcribe-03-2026) |
-| [**Qwen2-Audio**](qwen2-audio.md) | Alibaba | 7B | Multiple | -- | -- | [mlx-community/Qwen2-Audio-7B-Instruct-4bit](https://huggingface.co/mlx-community/Qwen2-Audio-7B-Instruct-4bit) |
-| **Canary** | NVIDIA | ~1B | 25 EU + RU, UK | -- | -- | [README](https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/stt/models/canary/README.md) |
-| **SenseVoice** | Alibaba DAMO | ~234M | 50+ | -- | -- | [mlx-community/SenseVoiceSmall](https://huggingface.co/mlx-community/SenseVoiceSmall) |
-| **FireRedASR2** | Xiaohongshu | ~1.18B | ZH, EN | -- | -- | [mlx-community/FireRedASR2-AED-mlx](https://huggingface.co/mlx-community/FireRedASR2-AED-mlx) |
-| **Granite Speech** | IBM | ~1B | EN, FR, DE, ES, PT, JA | Yes | -- | [README](https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/stt/models/granite_speech/README.md) |
-| **Moonshine** | Useful Sensors | 27M / 61M | EN | -- | -- | [README](https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/stt/models/moonshine/README.md) |
-| **MMS** | Meta | 1B | 1000+ | -- | -- | [README](https://github.com/Blaizzy/mlx-audio/blob/main/mlx_audio/stt/models/mms/README.md) |
-
-## Unified API
-
-All STT models share the same loading interface:
-
-=== "Python"
-
-    ```python
-    from mlx_audio.stt import load
-
-    model = load("mlx-community/whisper-large-v3-turbo-asr-fp16")
-    result = model.generate("audio.wav")
-    print(result.text)
-    ```
-
-=== "CLI"
-
-    ```bash
-    mlx_audio.stt.generate \
-      --model mlx-community/whisper-large-v3-turbo-asr-fp16 \
-      --audio audio.wav \
-      --verbose
-    ```
+| Model | Description | Languages | Streaming | Timestamps | Repo |
+|-------|-------------|-----------|:---------:|:----------:|------|
+| [**Canary**](generated/canary.md) | Multilingual ASR with speech translation | <div class="model-language-chips"><span class="model-language-chip">Multilingual</span></div> | -- | -- | -- |
+| [**Cohere Transcribe**](generated/cohere-transcribe.md) | Multilingual offline ASR with long-form chunking | <div class="model-language-chips"><span class="model-language-chip">Multilingual</span></div> | -- | -- | [CohereLabs/cohere-transcribe-03-2026](https://huggingface.co/CohereLabs/cohere-transcribe-03-2026) |
+| [**FireRedASR2**](generated/fireredasr2.md) | Bilingual Chinese and English ASR | <div class="model-language-chips"><span class="model-language-chip">ZH</span><span class="model-language-chip">EN</span></div> | -- | -- | [mlx-community/FireRedASR2-AED-mlx](https://huggingface.co/mlx-community/FireRedASR2-AED-mlx) |
+| [**GLM-ASR**](generated/glm-asr.md) | Speech recognition with a Whisper encoder and GLM decoder | <div class="model-language-chips"><span class="model-language-chip">ZH</span><span class="model-language-chip">EN</span></div> | -- | -- | -- |
+| [**Granite Speech**](generated/granite-speech.md) | ASR and speech translation from IBM Granite | <div class="model-language-chips"><span class="model-language-chip">EN</span><span class="model-language-chip">FR</span><span class="model-language-chip">DE</span><span class="model-language-chip">ES</span><span class="model-language-chip">PT</span><span class="model-language-chip">JA</span></div> | Yes | -- | [ibm-granite/granite-4.0-1b-speech](https://huggingface.co/ibm-granite/granite-4.0-1b-speech) |
+| [**LASR-CTC**](generated/lasr-ctc.md) | CTC-based speech recognition with a LASR encoder | -- | -- | -- | -- |
+| [**MMS**](generated/mms.md) | Massively multilingual speech recognition | <div class="model-language-chips"><span class="model-language-chip">Multilingual</span></div> | -- | -- | [facebook/mms-1b-all](https://huggingface.co/facebook/mms-1b-all) |
+| [**Moonshine**](generated/moonshine.md) | Lightweight English ASR | <div class="model-language-chips"><span class="model-language-chip">EN</span></div> | -- | -- | [UsefulSensors/moonshine-base](https://huggingface.co/UsefulSensors/moonshine-base) |
+| [**Parakeet**](generated/parakeet.md) | Fast multilingual ASR with streaming support | <div class="model-language-chips"><span class="model-language-chip">Multilingual</span></div> | Yes | Yes | [mlx-community/parakeet-tdt-0.6b-v3](https://huggingface.co/mlx-community/parakeet-tdt-0.6b-v3) |
+| [**Qwen2-Audio**](generated/qwen2-audio.md) | Audio-language model for transcription, translation, and audio understanding | <div class="model-language-chips"><span class="model-language-chip">Multilingual</span></div> | -- | -- | [mlx-community/Qwen2-Audio-7B-Instruct-4bit](https://huggingface.co/mlx-community/Qwen2-Audio-7B-Instruct-4bit) |
+| [**Qwen3-ASR**](generated/qwen3-asr.md) | Multilingual ASR with streaming support | <div class="model-language-chips"><span class="model-language-chip">ZH</span><span class="model-language-chip">EN</span><span class="model-language-chip">JA</span><span class="model-language-chip">KO</span><span class="model-language-chip">Multilingual</span></div> | Yes | Yes | [mlx-community/Qwen3-ASR-1.7B-8bit](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-8bit) |
+| [**Qwen3-ForcedAligner**](generated/qwen3-forced-aligner.md) | Word-level forced alignment for speech transcripts | <div class="model-language-chips"><span class="model-language-chip">ZH</span><span class="model-language-chip">EN</span><span class="model-language-chip">JA</span><span class="model-language-chip">KO</span><span class="model-language-chip">Multilingual</span></div> | -- | Yes | [mlx-community/Qwen3-ForcedAligner-0.6B-8bit](https://huggingface.co/mlx-community/Qwen3-ForcedAligner-0.6B-8bit) |
+| [**SenseVoice**](generated/sensevoice.md) | Multilingual speech recognition with emotion and event detection | <div class="model-language-chips"><span class="model-language-chip">Multilingual</span></div> | -- | -- | [mlx-community/SenseVoiceSmall](https://huggingface.co/mlx-community/SenseVoiceSmall) |
+| [**VibeVoice-ASR**](generated/vibevoice-asr.md) | Multilingual ASR with diarization support | <div class="model-language-chips"><span class="model-language-chip">Multilingual</span></div> | Yes | -- | [mlx-community/VibeVoice-ASR-bf16](https://huggingface.co/mlx-community/VibeVoice-ASR-bf16) |
+| [**Voxtral**](generated/voxtral.md) | Multilingual speech model from Mistral | <div class="model-language-chips"><span class="model-language-chip">Multilingual</span></div> | -- | -- | [mlx-community/Voxtral-Mini-3B-2507-bf16](https://huggingface.co/mlx-community/Voxtral-Mini-3B-2507-bf16) |
+| [**Voxtral Realtime**](generated/voxtral-realtime.md) | Streaming multilingual speech-to-text | <div class="model-language-chips"><span class="model-language-chip">Multilingual</span></div> | Yes | -- | [mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit](https://huggingface.co/mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit) |
+| [**Whisper**](generated/whisper.md) | OpenAI's robust STT model | <div class="model-language-chips"><span class="model-language-chip">Multilingual</span></div> | -- | Yes | [mlx-community/whisper-large-v3-turbo-asr-fp16](https://huggingface.co/mlx-community/whisper-large-v3-turbo-asr-fp16) |
 
 !!! tip "Choosing a model"
-    - **Best multilingual coverage**: Whisper (99+ languages) or MMS (1000+ languages)
-    - **Best accuracy for English**: Parakeet v2 or Whisper large-v3-turbo
-    - **Best for European languages**: Parakeet v3 (25 languages) or Canary
-    - **Lowest latency / streaming**: Voxtral Realtime (4bit variant)
-    - **Smallest footprint**: Moonshine tiny (27M parameters)
-    - **Speaker diarization built-in**: VibeVoice-ASR
-    - **Word-level alignment**: Qwen3-ForcedAligner
-    - **Emotion / event detection**: SenseVoice
+    - **Broadest multilingual coverage:** Whisper and MMS cover the most languages.
+    - **Streaming:** Parakeet, Qwen3-ASR, VibeVoice-ASR, Voxtral Realtime, and Granite Speech support low-latency flows.
+    - **Alignment / timestamps:** Whisper, Parakeet, and Qwen3-ForcedAligner are the strongest choices.

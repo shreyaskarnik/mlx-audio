@@ -26,7 +26,19 @@ jobs:
       - name: Ensure generated model catalog is up to date
         run: |
           python scripts/generate_model_catalog.py
-          git diff --exit-code -- .generated/model-catalog.json .snippets/generated/ mlx_audio/ui/public/model-catalog.json
+          git diff --exit-code -- \
+            .generated/model-catalog.json \
+            .snippets/generated/ \
+            mlx_audio/ui/public/model-catalog.json \
+            docs/models/index.md \
+            docs/models/tts/index.md \
+            docs/models/stt/index.md \
+            docs/models/sts/index.md \
+            docs/models/vad/index.md \
+            docs/models/tts/generated/ \
+            docs/models/stt/generated/ \
+            docs/models/sts/generated/ \
+            docs/models/vad/generated/
 
       - name: Build docs
         run: mkdocs build --strict

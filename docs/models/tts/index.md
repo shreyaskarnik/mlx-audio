@@ -1,60 +1,38 @@
+<!-- AUTO-GENERATED: do not edit by hand. Run scripts/generate_model_catalog.py -->
+
 # Text-to-Speech Models
 
-MLX-Audio supports a wide range of TTS models optimized for Apple Silicon. Each model offers different tradeoffs between speed, quality, languages, and features.
+MLX Audio supports a wide range of TTS models optimized for Apple Silicon. The generated catalog below is derived from `ModelConfig.DOCS` metadata so model capabilities stay in sync with the implementation.
 
-## Generated Catalog Preview
+## Model Catalog
 
-This table is generated from `ModelConfig.DOCS` metadata in the model packages.
-
---8<-- "generated/tts-model-catalog.md"
-
-## Model Comparison
-
-| Model | Size | Languages | Voice Cloning | Streaming | Key Features |
-|-------|------|-----------|:---:|:---:|--------------|
-| [**Kokoro**](kokoro.md) | 82M | EN, JA, ZH, FR, ES, IT, PT, HI | -- | -- | Fast, 54 voice presets, speed control |
-| [**Qwen3-TTS**](qwen3-tts.md) | 0.6B / 1.7B | ZH, EN, JA, KO, + more | Yes | Yes | Voice cloning, emotion control, voice design, batch generation |
-| [**Voxtral TTS**](voxtral-tts.md) | 4B | EN, FR, ES, DE, IT, PT, NL, AR, HI | -- | Yes | 20 voice presets, 9 languages, chunked streaming output |
-| [**CSM**](csm.md) | 1B | EN | Yes | Yes | Conversational speech, voice cloning, multi-turn context |
-| [**Dia**](dia.md) | 1.6B | EN | -- | -- | Dialogue with `[S1]`/`[S2]` speaker tags |
-| [**Chatterbox**](chatterbox.md) | -- | EN + 15 languages | Yes | -- | Expressive, emotion exaggeration control |
-| [KugelAudio](kugelaudio.md) | 7B | 24 European languages | -- | -- | VibeVoice-based multilingual TTS with diffusion decoding |
-| [Spark](https://github.com/Blaizzy/mlx-audio/tree/main/mlx_audio/tts/models/spark) | 0.5B | EN, ZH | -- | -- | SparkTTS model |
-| [OuteTTS](https://huggingface.co/mlx-community/OuteTTS-1.0-0.6B-fp16) | 0.6B | EN | -- | -- | Efficient TTS |
-| [Soprano](https://huggingface.co/mlx-community/Soprano-1.1-80M-bf16) | 80M | EN | -- | -- | High-quality TTS |
-| [Ming Omni TTS](https://github.com/Blaizzy/mlx-audio/tree/main/mlx_audio/tts/models/bailingmm/README.md) | 16.8B (A3B) / 0.5B | EN, ZH | Yes | -- | Voice cloning, style/emotion control, music & sound FX generation |
-| [TADA](https://github.com/Blaizzy/mlx-audio/tree/main/mlx_audio/tts/models/tada/README.md) | 1B / 3B | EN (1B), EN + 9 langs (3B) | Yes | -- | HumeAI, speed control, flow matching |
-| [Echo TTS](https://github.com/Blaizzy/mlx-audio/tree/main/mlx_audio/tts/models/echo_tts/README.md) | -- | EN | Yes | -- | Diffusion-based, fast voice cloning |
-| [Irodori TTS](https://github.com/Blaizzy/mlx-audio/tree/main/mlx_audio/tts/models/irodori_tts/README.md) | 500M | JA | Yes | -- | Japanese-only, DiT + DACVAE |
-| [Fish Speech](https://github.com/Blaizzy/mlx-audio/tree/main/mlx_audio/tts/models/fish_qwen3_omni/README.md) | -- | EN | Yes | -- | Inline control tags, multi-speaker, long-form batching |
-
-## Quick Start
-
-All TTS models share a common interface:
-
-=== "CLI"
-
-    ```bash
-    mlx_audio.tts.generate \
-        --model <model-id> \
-        --text "Hello, world!" \
-        --voice <voice-name>
-    ```
-
-=== "Python"
-
-    ```python
-    from mlx_audio.tts.utils import load_model
-
-    model = load_model("<model-id>")
-
-    for result in model.generate(text="Hello, world!"):
-        audio = result.audio  # mx.array waveform
-    ```
+| Model | Description | Languages | Voice Cloning | Streaming | Repo |
+|-------|-------------|-----------|:-------------:|:---------:|------|
+| [**Bark**](generated/bark.md) | Promptable multilingual TTS with preset voice prompts | <div class="model-language-chips"><span class="model-language-chip">Multilingual</span></div> | -- | -- | -- |
+| [**Chatterbox**](generated/chatterbox.md) | Expressive multilingual TTS with voice cloning | <div class="model-language-chips"><span class="model-language-chip">EN</span><span class="model-language-chip">ES</span><span class="model-language-chip">FR</span><span class="model-language-chip">DE</span><span class="model-language-chip">IT</span><span class="model-language-chip">PT</span><span class="model-language-chip">PL</span><span class="model-language-chip">TR</span><span class="model-language-chip">RU</span><span class="model-language-chip">NL</span><span class="model-language-chip">CS</span><span class="model-language-chip">AR</span><span class="model-language-chip">ZH</span><span class="model-language-chip">JA</span><span class="model-language-chip">HU</span><span class="model-language-chip">KO</span></div> | Yes | -- | [mlx-community/chatterbox-fp16](https://huggingface.co/mlx-community/chatterbox-fp16) |
+| [**Chatterbox Turbo**](generated/chatterbox-turbo.md) | Low-latency expressive TTS with voice cloning and streaming | <div class="model-language-chips"><span class="model-language-chip">EN</span></div> | Yes | Yes | [ResembleAI/chatterbox-turbo](https://huggingface.co/ResembleAI/chatterbox-turbo) |
+| [**CSM**](generated/csm.md) | Conversational speech model with voice cloning | <div class="model-language-chips"><span class="model-language-chip">EN</span></div> | Yes | Yes | [mlx-community/csm-1b](https://huggingface.co/mlx-community/csm-1b) |
+| [**Dia**](generated/dia.md) | Dialogue-focused TTS with speaker tags | <div class="model-language-chips"><span class="model-language-chip">EN</span></div> | -- | -- | [mlx-community/Dia-1.6B-fp16](https://huggingface.co/mlx-community/Dia-1.6B-fp16) |
+| [**Echo TTS**](generated/echo-tts.md) | Diffusion-based TTS with fast voice cloning | <div class="model-language-chips"><span class="model-language-chip">EN</span></div> | Yes | -- | [mlx-community/echo-tts-base](https://huggingface.co/mlx-community/echo-tts-base) |
+| [**Fish Speech**](generated/fish-speech.md) | Voice cloning and multi-speaker TTS with inline control tags | <div class="model-language-chips"><span class="model-language-chip">Multilingual</span></div> | Yes | -- | [mlx-community/fish-audio-s2-pro](https://huggingface.co/mlx-community/fish-audio-s2-pro) |
+| [**IndexTTS**](generated/indextts.md) | Zero-shot TTS with voice cloning and BigVGAN decoding | <div class="model-language-chips"><span class="model-language-chip">Multilingual</span></div> | Yes | -- | [mlx-community/IndexTTS](https://huggingface.co/mlx-community/IndexTTS) |
+| [**Irodori TTS**](generated/irodori-tts.md) | Japanese TTS with DiT and DACVAE decoding | <div class="model-language-chips"><span class="model-language-chip">JA</span></div> | Yes | -- | [mlx-community/Irodori-TTS-500M-fp16](https://huggingface.co/mlx-community/Irodori-TTS-500M-fp16) |
+| [**KittenTTS**](generated/kitten-tts.md) | Small English TTS with preset expressive voices | <div class="model-language-chips"><span class="model-language-chip">EN</span></div> | -- | -- | -- |
+| [**Kokoro**](generated/kokoro.md) | Fast, high-quality multilingual TTS | <div class="model-language-chips"><span class="model-language-chip">EN</span><span class="model-language-chip">JA</span><span class="model-language-chip">ZH</span><span class="model-language-chip">FR</span><span class="model-language-chip">ES</span><span class="model-language-chip">IT</span><span class="model-language-chip">PT</span><span class="model-language-chip">HI</span></div> | -- | Yes | [mlx-community/Kokoro-82M-bf16](https://huggingface.co/mlx-community/Kokoro-82M-bf16) |
+| [**KugelAudio**](generated/kugelaudio.md) | 7B multilingual TTS for European languages with diffusion decoding | <div class="model-language-chips"><span class="model-language-chip">EN</span><span class="model-language-chip">DE</span><span class="model-language-chip">FR</span><span class="model-language-chip">ES</span><span class="model-language-chip">IT</span><span class="model-language-chip">PT</span><span class="model-language-chip">NL</span><span class="model-language-chip">PL</span><span class="model-language-chip">RU</span><span class="model-language-chip">UK</span><span class="model-language-chip">CS</span><span class="model-language-chip">RO</span><span class="model-language-chip">HU</span><span class="model-language-chip">SV</span><span class="model-language-chip">DA</span><span class="model-language-chip">FI</span><span class="model-language-chip">NO</span><span class="model-language-chip">EL</span><span class="model-language-chip">BG</span><span class="model-language-chip">SK</span><span class="model-language-chip">HR</span><span class="model-language-chip">SR</span><span class="model-language-chip">TR</span></div> | -- | -- | [kugelaudio/kugelaudio-0-open](https://huggingface.co/kugelaudio/kugelaudio-0-open) |
+| [**Ming Omni TTS (BailingMM)**](generated/ming-omni-bailingmm.md) | Multimodal generation with voice cloning and style control | <div class="model-language-chips"><span class="model-language-chip">EN</span><span class="model-language-chip">ZH</span></div> | Yes | -- | [mlx-community/Ming-omni-tts-16.8B-A3B-bf16](https://huggingface.co/mlx-community/Ming-omni-tts-16.8B-A3B-bf16) |
+| [**Ming Omni TTS (Dense)**](generated/ming-omni-dense.md) | Lightweight Ming Omni variant for voice cloning and style control | <div class="model-language-chips"><span class="model-language-chip">EN</span><span class="model-language-chip">ZH</span></div> | Yes | -- | [mlx-community/Ming-omni-tts-0.5B-bf16](https://huggingface.co/mlx-community/Ming-omni-tts-0.5B-bf16) |
+| [**OuteTTS**](generated/outetts.md) | Efficient text-to-speech for Apple Silicon | <div class="model-language-chips"><span class="model-language-chip">EN</span></div> | -- | -- | [mlx-community/OuteTTS-1.0-0.6B-fp16](https://huggingface.co/mlx-community/OuteTTS-1.0-0.6B-fp16) |
+| [**PocketTTS**](generated/pocket-tts.md) | Compact streaming TTS with optional voice conditioning | <div class="model-language-chips"><span class="model-language-chip">Multilingual</span></div> | Yes | Yes | -- |
+| [**Qwen3-TTS**](generated/qwen3-tts.md) | Multilingual TTS with voice cloning and voice design | <div class="model-language-chips"><span class="model-language-chip">ZH</span><span class="model-language-chip">EN</span><span class="model-language-chip">JA</span><span class="model-language-chip">KO</span><span class="model-language-chip">Multilingual</span></div> | Yes | Yes | [mlx-community/Qwen3-TTS-12Hz-1.7B-VoiceDesign-bf16](https://huggingface.co/mlx-community/Qwen3-TTS-12Hz-1.7B-VoiceDesign-bf16) |
+| [**Soprano**](generated/soprano.md) | High-quality English TTS | <div class="model-language-chips"><span class="model-language-chip">EN</span></div> | -- | -- | [mlx-community/Soprano-1.1-80M-bf16](https://huggingface.co/mlx-community/Soprano-1.1-80M-bf16) |
+| [**Spark**](generated/spark-tts.md) | SparkTTS model for English and Chinese speech generation | <div class="model-language-chips"><span class="model-language-chip">EN</span><span class="model-language-chip">ZH</span></div> | -- | -- | [mlx-community/Spark-TTS-0.5B-bf16](https://huggingface.co/mlx-community/Spark-TTS-0.5B-bf16) |
+| [**TADA**](generated/tada.md) | Text-Acoustic Dual Alignment TTS with voice cloning | <div class="model-language-chips"><span class="model-language-chip">EN</span><span class="model-language-chip">Multilingual</span></div> | Yes | -- | [HumeAI/mlx-tada-1b](https://huggingface.co/HumeAI/mlx-tada-1b) |
+| [**VibeVoice**](generated/vibevoice.md) | Streaming multilingual TTS with cached voice conditioning | <div class="model-language-chips"><span class="model-language-chip">Multilingual</span></div> | Yes | Yes | -- |
+| [**VoxCPM**](generated/voxcpm.md) | Multilingual TTS with voice cloning and 44.1kHz audio output | <div class="model-language-chips"><span class="model-language-chip">Multilingual</span></div> | Yes | -- | -- |
+| [**Voxtral TTS**](generated/voxtral-tts.md) | Mistral's 4B multilingual TTS | <div class="model-language-chips"><span class="model-language-chip">EN</span><span class="model-language-chip">FR</span><span class="model-language-chip">ES</span><span class="model-language-chip">DE</span><span class="model-language-chip">IT</span><span class="model-language-chip">PT</span><span class="model-language-chip">NL</span><span class="model-language-chip">AR</span><span class="model-language-chip">HI</span></div> | -- | Yes | [mlx-community/Voxtral-4B-TTS-2603-mlx-bf16](https://huggingface.co/mlx-community/Voxtral-4B-TTS-2603-mlx-bf16) |
 
 !!! tip "Choosing a model"
-    - **Fastest / smallest:** Kokoro (82M) -- great for quick generation with many voice presets.
-    - **Voice cloning:** CSM or Qwen3-TTS -- clone any voice from a short reference clip.
-    - **Multilingual:** Voxtral TTS (9 languages, 20 voices) or Chatterbox (16 languages).
-    - **Dialogue:** Dia -- built-in support for multi-speaker conversations.
-    - **Emotion / style control:** Qwen3-TTS CustomVoice or VoiceDesign variants.
+    - **Fastest / smallest:** Kokoro and Soprano are good low-footprint defaults.
+    - **Voice cloning:** Qwen3-TTS, CSM, Chatterbox, and VibeVoice all support cloned or conditioned voices.
+    - **Streaming:** Qwen3-TTS, Voxtral TTS, Chatterbox Turbo, PocketTTS, and VibeVoice support chunked playback.
