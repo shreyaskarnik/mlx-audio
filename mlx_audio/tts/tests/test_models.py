@@ -4341,5 +4341,246 @@ class TestAudioDiTModel(unittest.TestCase):
         )
 
 
+class TestMeloTTSConfig(unittest.TestCase):
+    def test_config_defaults(self):
+        from mlx_audio.tts.models.melotts.melotts import ModelConfig
+
+        cfg = ModelConfig()
+        self.assertEqual(cfg.sampling_rate, 44100)
+        self.assertEqual(cfg.sample_rate, 44100)
+        self.assertEqual(cfg.filter_length, 2048)
+        self.assertEqual(cfg.hop_length, 512)
+        self.assertEqual(cfg.inter_channels, 192)
+        self.assertEqual(cfg.hidden_channels, 192)
+        self.assertEqual(cfg.filter_channels, 768)
+        self.assertEqual(cfg.n_heads, 2)
+        self.assertEqual(cfg.n_layers, 6)
+        self.assertEqual(cfg.n_vocab, 219)
+        self.assertEqual(cfg.gin_channels, 256)
+        self.assertEqual(cfg.n_speakers, 256)
+        self.assertTrue(cfg.add_blank)
+        self.assertTrue(cfg.use_spk_conditioned_encoder)
+        self.assertTrue(cfg.use_transformer_flow)
+
+    def test_config_sample_rate_property(self):
+        from mlx_audio.tts.models.melotts.melotts import ModelConfig
+
+        cfg = ModelConfig(sampling_rate=22050)
+        self.assertEqual(cfg.sample_rate, 22050)
+
+    def test_config_from_dict(self):
+        from mlx_audio.tts.models.melotts.melotts import ModelConfig
+
+        cfg = ModelConfig.from_dict(
+            {
+                "sampling_rate": 22050,
+                "n_vocab": 300,
+                "n_speakers": 10,
+                "spk2id": {"EN": 0, "FR": 1},
+                "unknown_field": "ignored",
+            }
+        )
+        self.assertEqual(cfg.sampling_rate, 22050)
+        self.assertEqual(cfg.n_vocab, 300)
+        self.assertEqual(cfg.n_speakers, 10)
+        self.assertEqual(cfg.spk2id, {"EN": 0, "FR": 1})
+
+    def test_config_list_defaults(self):
+        from mlx_audio.tts.models.melotts.melotts import ModelConfig
+
+        cfg = ModelConfig()
+        self.assertEqual(cfg.resblock_kernel_sizes, [3, 7, 11])
+        self.assertEqual(cfg.upsample_rates, [8, 8, 2, 2, 2])
+        self.assertEqual(cfg.upsample_kernel_sizes, [16, 16, 8, 2, 2])
+        self.assertEqual(len(cfg.resblock_dilation_sizes), 3)
+
+
+class TestMeloTTSModel(unittest.TestCase):
+    def _make_config(self):
+        from mlx_audio.tts.models.melotts.melotts import ModelConfig
+
+        return ModelConfig(
+            n_vocab=32,
+            inter_channels=16,
+            hidden_channels=16,
+            filter_channels=32,
+            n_heads=2,
+            n_layers=1,
+            n_layers_trans_flow=1,
+            kernel_size=3,
+            n_speakers=4,
+            gin_channels=16,
+            resblock_kernel_sizes=[3],
+            resblock_dilation_sizes=[[1, 3]],
+            upsample_rates=[8, 8],
+            upsample_initial_channel=32,
+            upsample_kernel_sizes=[16, 16],
+            n_layers_q=1,
+            num_tones=4,
+            num_languages=2,
+            bert_hidden_size=16,
+            filter_length=128,
+        )
+
+    def test_model_init(self):
+        from mlx_audio.tts.models.melotts.melotts import Model
+
+        cfg = self._make_config()
+        model = Model(cfg)
+        self.assertIsNotNone(model.enc_p)
+        self.assertIsNotNone(model.dec)
+        self.assertIsNotNone(model.enc_q)
+        self.assertIsNotNone(model.dp)
+        self.assertIsNotNone(model.sdp)
+        self.assertIsNotNone(model.emb_g)
+        self.assertEqual(len(model.flow_layers), 8)  # 4 * (coupling + flip)
+
+    def test_model_sample_rate(self):
+        from mlx_audio.tts.models.melotts.melotts import Model
+
+        cfg = self._make_config()
+        model = Model(cfg)
+        self.assertEqual(model.sample_rate, 44100)
+
+    def test_sanitize_skips_discriminator_keys(self):
+        from mlx_audio.tts.models.melotts.melotts import Model
+
+        cfg = self._make_config()
+        model = Model(cfg)
+        weights = {
+            "net_dur_disc.layer.weight": mx.zeros((4, 4)),
+            "net_d.layer.weight": mx.zeros((4, 4)),
+            "enc_p.emb.weight": mx.zeros((32, 16)),
+        }
+        sanitized = model.sanitize(weights)
+        self.assertNotIn("net_dur_disc.layer.weight", sanitized)
+        self.assertNotIn("net_d.layer.weight", sanitized)
+        self.assertIn("enc_p.emb.weight", sanitized)
+
+    def test_sanitize_renames_flow_keys(self):
+        from mlx_audio.tts.models.melotts.melotts import Model
+
+        cfg = self._make_config()
+        model = Model(cfg)
+        weights = {
+            "flow.flows.0.pre.weight": mx.zeros((16, 16)),
+        }
+        sanitized = model.sanitize(weights)
+        self.assertIn("flow_layers.0.pre.weight", sanitized)
+        self.assertNotIn("flow.flows.0.pre.weight", sanitized)
+
+    def test_sanitize_weight_norm_fusion(self):
+        from mlx_audio.tts.models.melotts.melotts import Model
+
+        cfg = self._make_config()
+        model = Model(cfg)
+
+        # Simulate weight_v and weight_g pair
+        wv = mx.ones((4, 3))
+        wg = mx.ones((4, 1)) * 2.0
+        weights = {
+            "enc_p.encoder.attn_layers.0.conv_k.weight_v": wv,
+            "enc_p.encoder.attn_layers.0.conv_k.weight_g": wg,
+        }
+        sanitized = model.sanitize(weights)
+
+        # Should fuse weight_v + weight_g into a single .weight
+        fused_key = "enc_p.encoder.attn_layers.0.conv_k.weight"
+        self.assertIn(fused_key, sanitized)
+        # weight_g and weight_v should not appear
+        self.assertNotIn(
+            "enc_p.encoder.attn_layers.0.conv_k.weight_g", sanitized
+        )
+        self.assertNotIn(
+            "enc_p.encoder.attn_layers.0.conv_k.weight_v", sanitized
+        )
+
+        # Verify the fused weight has correct shape
+        self.assertEqual(sanitized[fused_key].shape, (4, 3))
+
+    def test_sanitize_weight_v_without_g_kept_as_is(self):
+        from mlx_audio.tts.models.melotts.melotts import Model
+
+        cfg = self._make_config()
+        model = Model(cfg)
+        weights = {
+            "some_layer.weight_v": mx.zeros((4, 4)),
+        }
+        sanitized = model.sanitize(weights)
+        self.assertIn("some_layer.weight_v", sanitized)
+
+    def test_sanitize_gamma_to_weight(self):
+        from mlx_audio.tts.models.melotts.melotts import Model
+
+        cfg = self._make_config()
+        model = Model(cfg)
+        weights = {
+            "enc_p.norm.gamma": mx.ones((16,)),
+        }
+        sanitized = model.sanitize(weights)
+        self.assertIn("enc_p.norm.weight", sanitized)
+        self.assertNotIn("enc_p.norm.gamma", sanitized)
+
+    def test_sanitize_beta_to_bias(self):
+        from mlx_audio.tts.models.melotts.melotts import Model
+
+        cfg = self._make_config()
+        model = Model(cfg)
+        weights = {
+            "enc_p.norm.beta": mx.zeros((16,)),
+        }
+        sanitized = model.sanitize(weights)
+        self.assertIn("enc_p.norm.bias", sanitized)
+        self.assertNotIn("enc_p.norm.beta", sanitized)
+
+    def test_sequence_mask(self):
+        from mlx_audio.tts.models.melotts.melotts import Model
+
+        cfg = self._make_config()
+        model = Model(cfg)
+        lengths = mx.array([3, 5, 2])
+        mask = model._sequence_mask(lengths, max_len=6)
+        mx.eval(mask)
+        self.assertEqual(mask.shape, (3, 6))
+        # First row: [1,1,1,0,0,0]
+        np.testing.assert_array_equal(
+            np.array(mask[0]), [1.0, 1.0, 1.0, 0.0, 0.0, 0.0]
+        )
+        # Second row: [1,1,1,1,1,0]
+        np.testing.assert_array_equal(
+            np.array(mask[1]), [1.0, 1.0, 1.0, 1.0, 1.0, 0.0]
+        )
+
+    def test_generate_path_shape(self):
+        from mlx_audio.tts.models.melotts.melotts import Model
+
+        cfg = self._make_config()
+        model = Model(cfg)
+        # duration: (B=1, 1, t_x=3), mask: (B=1, 1, t_x=3, t_y=6)
+        duration = mx.array([[[2.0, 1.0, 3.0]]])
+        mask = mx.ones((1, 1, 3, 6))
+        path = model._generate_path(duration, mask)
+        mx.eval(path)
+        self.assertEqual(path.shape, (1, 1, 3, 6))
+
+    def test_generate_path_alignment(self):
+        from mlx_audio.tts.models.melotts.melotts import Model
+
+        cfg = self._make_config()
+        model = Model(cfg)
+        # dur = [2, 1, 2] => phone 0 maps to frames 0-1, phone 1 to frame 2, phone 2 to frames 3-4
+        duration = mx.array([[[2.0, 1.0, 2.0]]])
+        mask = mx.ones((1, 1, 3, 5))
+        path = model._generate_path(duration, mask)
+        mx.eval(path)
+        path_np = np.array(path[0, 0])
+        # Phone 0 -> frames 0,1
+        np.testing.assert_array_equal(path_np[0], [1.0, 1.0, 0.0, 0.0, 0.0])
+        # Phone 1 -> frame 2
+        np.testing.assert_array_equal(path_np[1], [0.0, 0.0, 1.0, 0.0, 0.0])
+        # Phone 2 -> frames 3,4
+        np.testing.assert_array_equal(path_np[2], [0.0, 0.0, 0.0, 1.0, 1.0])
+
+
 if __name__ == "__main__":
     unittest.main()
